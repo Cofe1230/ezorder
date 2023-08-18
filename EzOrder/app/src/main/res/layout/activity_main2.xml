@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="마커1"/>
+        <!--<Button
+            android:id="@+id/btnmark2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="마커2"/>
+        <Button
+            android:id="@+id/btnmark3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="마커3"/> -->
+    </LinearLayout>
+    <com.naver.maps.map.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:navermap_latitude="35.1560157"
+        app:navermap_longitude="129.0594088"
+        app:navermap_zoom="15"/>
+
+</LinearLayout>

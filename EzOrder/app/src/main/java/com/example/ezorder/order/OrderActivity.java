@@ -1,0 +1,88 @@
+package com.example.ezorder.order;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import com.example.ezorder.R;
+import com.example.ezorder.databinding.ActivityOrderBinding;
+
+import java.util.ArrayList;
+
+public class OrderActivity extends AppCompatActivity {
+    private ActivityOrderBinding binding;
+    private ArrayList<Menu> menuList = new ArrayList<>();
+    private ArrayList<OrderCount> orderList = new ArrayList<>();
+    private int totalPrice;//전체가격
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //binding : Oerder Activity binding
+        //menuList : 해당 가게의 메뉴들
+        binding = ActivityOrderBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        //TestMenu(DB구성시 삭제) menu: id, name, price, imgname
+        menuList.add(new Menu(0,"아메리카노",1500,"1"));
+        menuList.add(new Menu(1,"카페라떼",3000,"1"));
+        menuList.add(new Menu(2,"카푸치노",3000,"1"));
+        menuList.add(new Menu(3,"카라멜 마끼아또",4000,"1"));
+
+        MenuAdapter menuAdapter = new MenuAdapter(menuList);
+        OrderAdapter orderAdapter = new OrderAdapter(orderList);
+
+        //recyclerview menu setting
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderActivity.this,RecyclerView.VERTICAL,false);
+        binding.recyclerViewMenu.setLayoutManager(linearLayoutManager);
+        binding.recyclerViewMenu.setAdapter(menuAdapter);
+
+        //recyclerview order setting
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(OrderActivity.this,RecyclerView.VERTICAL,false);
+        binding.recyclerViewCart.setLayoutManager(linearLayoutManager2);
+        binding.recyclerViewCart.setAdapter(orderAdapter);
+
+        //menu클릭
+        menuAdapter.setOnItemClickListener(new MenuAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int pos) {
+                // flag 같은 주문이 없으면 0 있으면 1
+                int flag = 0;
+
+                for(int i=0; i<orderList.size(); i++){
+                    Menu m = orderList.get(i).getMenu();
+                    if(m.equals(menuList.get(pos))){
+                        orderList.get(i).setCount(orderList.get(i).getCount()+1);
+                        orderAdapter.updateItem(orderList.get(i),i);
+                        totalPrice+=menuList.get(pos).getPrice();
+                        binding.txtTotalPrice.setText(totalPrice+" 원");
+                        flag = 1;
+                        break;
+                    }
+                }
+                if(flag==0){
+                    OrderCount orderCount = new OrderCount(menuList.get(pos),1,null);
+                    orderAdapter.addItem(orderCount);
+                    totalPrice+=menuList.get(pos).getPrice();
+                    binding.txtTotalPrice.setText(totalPrice+" 원");
+                }
+            }
+        });
+
+        //주문하기 버튼 클릭
+        binding.btnOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orderList = orderAdapter.getOrderList();
+                OrderInfo orderInfo = new OrderInfo("주문접수",orderList);
+
+            }
+        });
+    }
+}

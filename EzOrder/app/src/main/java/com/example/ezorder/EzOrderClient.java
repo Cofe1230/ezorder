@@ -5,6 +5,7 @@ import com.example.ezorder.order.OrderService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 public class EzOrderClient {
     private static EzOrderClient instance;
     private OrderService orderService;
@@ -17,7 +18,7 @@ public class EzOrderClient {
     }
     public EzOrderClient(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.100.102.20:8877/")
+                .baseUrl("http://10.100.102.20:8044/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         //서비스 추가

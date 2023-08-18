@@ -14,6 +14,7 @@ import com.example.ezorder.R;
 import com.example.ezorder.databinding.ActivityOrderBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,11 +35,32 @@ public class OrderActivity extends AppCompatActivity {
         binding = ActivityOrderBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //retrofit Service
+        OrderService orderService = EzOrderClient.getInstance().getOrderService();
+        MenuService menuService = EzOrderClient.getInstance().getMenuService();
+
         //TestMenu(DB구성시 삭제) menu: id, name, price, imgname
-        menuList.add(new Menu(1,"아메리카노",1500,"1"));
-        menuList.add(new Menu(2,"카페라떼",3000,"1"));
-        menuList.add(new Menu(3,"카푸치노",3000,"1"));
-        menuList.add(new Menu(4,"카라멜 마끼아또",4000,"1"));
+        Shop shop = new Shop(1,"1",1,1,"1");
+
+        //메뉴 리스트
+        Call<List<Menu>> call = menuService.findByShopid(shop);
+        call.enqueue(new Callback<List<Menu>>() {
+            @Override
+            public void onResponse(Call<List<Menu>> call, Response<List<Menu>> response) {
+                for(Menu m : response.body()){
+                    menuList.add(m);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Menu>> call, Throwable t) {
+
+            }
+        });
+//        menuList.add(new Menu(1,"아메리카노",1500,"1"));
+//        menuList.add(new Menu(2,"카페라떼",3000,"1"));
+//        menuList.add(new Menu(3,"카푸치노",3000,"1"));
+//        menuList.add(new Menu(4,"카라멜 마끼아또",4000,"1"));
 
         MenuAdapter menuAdapter = new MenuAdapter(menuList);
         OrderAdapter orderAdapter = new OrderAdapter(orderList);
@@ -52,8 +74,11 @@ public class OrderActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(OrderActivity.this,RecyclerView.VERTICAL,false);
         binding.recyclerViewCart.setLayoutManager(linearLayoutManager2);
         binding.recyclerViewCart.setAdapter(orderAdapter);
+        
 
-        OrderService orderService = EzOrderClient.getInstance().getOrderService();
+
+
+
 
         //menu클릭
         menuAdapter.setOnItemClickListener(new MenuAdapter.OnItemClickListener() {

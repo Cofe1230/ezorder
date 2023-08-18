@@ -1,5 +1,6 @@
 package com.example.ezorder;
 
+import com.example.ezorder.order.MenuService;
 import com.example.ezorder.order.OrderService;
 
 import retrofit2.Retrofit;
@@ -9,6 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class EzOrderClient {
     private static EzOrderClient instance;
     private OrderService orderService;
+    private MenuService menuService;
 
     public static EzOrderClient getInstance(){
         if(instance==null){
@@ -24,9 +26,14 @@ public class EzOrderClient {
         //서비스 추가
         //orderSerive : 가게에서 주문 관련된 서비스(order/OrderService)
         orderService = retrofit.create(OrderService.class);
+        menuService = retrofit.create(MenuService.class);
     }
     //getter
     public OrderService getOrderService() {
         return orderService;
+    }
+
+    public MenuService getMenuService() {
+        return menuService;
     }
 }

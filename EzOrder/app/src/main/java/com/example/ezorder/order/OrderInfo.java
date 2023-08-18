@@ -3,7 +3,7 @@ package com.example.ezorder.order;
 import java.util.List;
 
 public class OrderInfo {
-    private Long orderId;
+    private long orderId;
     private String orderStatus;
     private List<OrderCount> orderList;
 
@@ -12,7 +12,7 @@ public class OrderInfo {
         this.orderList = orderList;
     }
 
-    public Long getOrderId() {
+    public long getOrderId() {
         return orderId;
     }
 

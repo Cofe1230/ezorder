@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import lombok.Getter;
@@ -19,17 +18,20 @@ public class OrderCount {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderCountid;
 	@OneToOne
-	@JoinColumn(name = "menu_id")
+	@JoinColumn(name = "menuid")
 	private Menu menu;
 	private int count;
 	@ManyToOne
-	@JoinColumn(name = "order_id")
+	@JoinColumn(name = "orderInfoid")
 	private OrderInfo orderInfo;
 	public OrderCount(Menu menu, int count, OrderInfo orderInfo) {
 		super();
 		this.menu = menu;
 		this.count = count;
 		this.orderInfo = orderInfo;
+	}
+	public OrderCount() {
+		
 	}
 	
 	

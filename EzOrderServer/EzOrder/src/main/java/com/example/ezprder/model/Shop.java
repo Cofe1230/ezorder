@@ -26,8 +26,8 @@ public class Shop {
 	private double latitude;
 	private double longitude;
 	private String shopImg;
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@OneToOne
+	@JoinColumn(name = "userid")
 	private User user;
 	@OneToMany(mappedBy = "shop",cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("shop")

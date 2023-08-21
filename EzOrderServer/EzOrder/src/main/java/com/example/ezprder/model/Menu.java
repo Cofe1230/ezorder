@@ -20,7 +20,7 @@ public class Menu {
 	private int price;
 	private String menuImg;
 	@ManyToOne
-	@JoinColumn(name = "shop_id")
+	@JoinColumn(name = "shopid")
 	private Shop shop;
 
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.example.ezprder.model.Menu;
 import com.example.ezprder.model.Shop;
 import com.example.ezprder.repository.MenuRepository;
+import com.example.ezprder.repository.ShopRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,9 +15,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MenuService {
 	private final MenuRepository menuRepository;
+	private final ShopRepository shopRepository;
 	
-	public List<Menu> findByShopId(Shop shop){
-		return menuRepository.findByShopId(shop);
+	public List<Menu> findByShop(long shopid){
+		Shop shop = shopRepository.findById(shopid).get();
+		return menuRepository.findByShop(shop);
 	}
 
 }

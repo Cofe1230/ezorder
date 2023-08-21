@@ -8,5 +8,5 @@ import com.example.ezprder.model.Menu;
 import com.example.ezprder.model.Shop;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
-	public List<Menu> findByShopId(Shop shop);
+	List<Menu> findByShop(Shop shop);
 }

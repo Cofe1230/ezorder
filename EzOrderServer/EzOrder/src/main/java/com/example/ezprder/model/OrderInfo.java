@@ -1,5 +1,6 @@
 package com.example.ezprder.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
@@ -25,7 +27,7 @@ public class OrderInfo {
 	private String orderStatus;
 	@OneToMany(mappedBy = "orderInfo",cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("orderInfo")
-	private List<OrderCount> orderList;
+	private List<OrderCount> orderList = new ArrayList<>();
 	@ManyToOne
 	@JoinColumn(name = "shopid")
 	private Shop shop;

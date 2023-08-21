@@ -33,8 +33,4 @@ public class OrderCount {
 	public OrderCount() {
 		
 	}
-	
-	
-	
-	
 }

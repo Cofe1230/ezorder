@@ -4,17 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+
 import com.example.ezorder.EzOrderClient;
 import com.example.ezorder.R;
 import com.example.ezorder.databinding.ActivityOrderBinding;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -118,7 +122,9 @@ public class OrderActivity extends AppCompatActivity {
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.d("테스트", "onResponse: 성공");
+                        Toast.makeText(getApplicationContext(),"주문성공", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), OrderStatusActivity.class);
+                        startActivity(intent);
                     }
 
                     @Override

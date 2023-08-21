@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.ezorder.databinding.ActivityOrderBinding;
 import com.example.ezorder.databinding.MenuItemBinding;
 
@@ -51,6 +52,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         Menu menu = menuList.get(position);
         holder.binding.txtMenuName.setText(menu.getMenuName());
         holder.binding.txtMenuPrice.setText(Integer.toString(menu.getPrice()));
+
+        //이미지 testurl 변경필요
+        Glide.with(holder.binding.getRoot()).load("http://10.100.102.20:8044/image/test01.png").into(holder.binding.imageViewMenu);
         
         //view 클릭
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {

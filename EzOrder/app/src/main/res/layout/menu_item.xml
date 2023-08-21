@@ -39,13 +39,12 @@
         app:layout_constraintTop_toBottomOf="@+id/txtMenuName" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewMenu"
         android:layout_width="79dp"
         android:layout_height="85dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:src="@drawable/ic_launcher_foreground"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.781"
-        app:layout_constraintStart_toEndOf="@+id/txtMenuName"
-        app:layout_constraintTop_toBottomOf="@+id/view2"
-        android:src="@drawable/ic_launcher_foreground" />
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ public class MenuService {
 	private final MenuRepository menuRepository;
 	private final ShopRepository shopRepository;
 	
+	//가게id로 메뉴 전체보기
 	public List<Menu> findByShop(long shopid){
 		Shop shop = shopRepository.findById(shopid).get();
 		return menuRepository.findByShop(shop);

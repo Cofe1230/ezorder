@@ -6,10 +6,24 @@ public class OrderInfo {
     private long orderId;
     private String orderStatus;
     private List<OrderCount> orderList;
+    private Shop shop;
 
-    public OrderInfo(String orderStatus, List<OrderCount> orderList) {
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
+    public OrderInfo(String orderStatus, List<OrderCount> orderList,Shop shop) {
         this.orderStatus = orderStatus;
         this.orderList = orderList;
+        this.shop = shop;
     }
 
     public long getOrderId() {

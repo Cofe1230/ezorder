@@ -10,6 +10,10 @@ public class Shop {
     public Shop() {
     }
 
+    public Shop(long shopId) {
+        this.shopId = shopId;
+    }
+
     public Shop(long shopId, String shopName, double latitude, double longitude, String shopImg) {
         this.shopId = shopId;
         this.shopName = shopName;

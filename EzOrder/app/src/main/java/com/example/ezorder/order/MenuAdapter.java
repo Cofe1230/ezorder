@@ -32,6 +32,13 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         void onItemClick(int pos);
     }
 
+    ////////
+    //추가
+    public void addItem(Menu menu){
+        menuList.add(menu);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

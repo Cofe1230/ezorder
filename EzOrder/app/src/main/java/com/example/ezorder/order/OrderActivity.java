@@ -40,23 +40,8 @@ public class OrderActivity extends AppCompatActivity {
         MenuService menuService = EzOrderClient.getInstance().getMenuService();
 
         //TestMenu(DB구성시 삭제) menu: id, name, price, imgname
-        Shop shop = new Shop(1,"1",1,1,"1");
-
-        //메뉴 리스트
-        Call<List<Menu>> call = menuService.findByShopid(shop);
-        call.enqueue(new Callback<List<Menu>>() {
-            @Override
-            public void onResponse(Call<List<Menu>> call, Response<List<Menu>> response) {
-                for(Menu m : response.body()){
-                    menuList.add(m);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Menu>> call, Throwable t) {
-
-            }
-        });
+//        Shop shop = new Shop(1,"1",1,1,"1");
+        long shopid = 1;
 //        menuList.add(new Menu(1,"아메리카노",1500,"1"));
 //        menuList.add(new Menu(2,"카페라떼",3000,"1"));
 //        menuList.add(new Menu(3,"카푸치노",3000,"1"));
@@ -74,8 +59,24 @@ public class OrderActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(OrderActivity.this,RecyclerView.VERTICAL,false);
         binding.recyclerViewCart.setLayoutManager(linearLayoutManager2);
         binding.recyclerViewCart.setAdapter(orderAdapter);
-        
 
+        //메뉴 리스트
+        Call<List<Menu>> call = menuService.findByShop(shopid);
+        call.enqueue(new Callback<List<Menu>>() {
+            @Override
+            public void onResponse(Call<List<Menu>> call, Response<List<Menu>> response) {
+                for(Menu m : response.body()){
+                    menuList.add(m);
+
+                }
+                menuAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<List<Menu>> call, Throwable t) {
+
+            }
+        });
 
 
 
@@ -112,7 +113,7 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 orderList = orderAdapter.getOrderList();
-                OrderInfo orderInfo = new OrderInfo("주문접수",orderList);
+                OrderInfo orderInfo = new OrderInfo("주문접수",orderList,new Shop(shopid));
                 Call<Void> call = orderService.save(orderInfo);
                 call.enqueue(new Callback<Void>() {
                     @Override

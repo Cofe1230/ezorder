@@ -17,9 +17,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter @Setter @ToString
 public class OrderInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +32,14 @@ public class OrderInfo {
 	@ManyToOne
 	@JoinColumn(name = "shopid")
 	private Shop shop;
+	private String memberName;
+	private int totPrice;
 	public OrderInfo() {
     }
 	public OrderInfo(OrderInfo orderInfo) {
 		orderStatus = orderInfo.getOrderStatus();
 	}
-	private String memberId;
+	
 //	@OneToMany(cascade = CascadeType.ALL)
 //	@CollectionTable(name="order_item_mapping",
 //			joinColumns = {@JoinColumn(name="order_id",referencedColumnName = "id")})

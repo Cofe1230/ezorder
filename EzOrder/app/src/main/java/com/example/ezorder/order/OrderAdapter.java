@@ -48,7 +48,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     @Override
     public void onBindViewHolder(@NonNull OrderAdapter.OrderViewHolder holder,@SuppressLint("RecyclerView") int position) {
         holder.binding.txtMenuName.setText(orderList.get(position).getMenu().getMenuName());
-        holder.binding.editCount.setText(Integer.toString(orderList.get(position).getCount()));
+        holder.binding.txtCount.setText(Integer.toString(orderList.get(position).getCount()));
     }
 
     @Override

@@ -31,7 +31,7 @@ public class OrderActivity extends AppCompatActivity {
     private ArrayList<OrderCount> orderList = new ArrayList<>();
     private int totalPrice;//전체가격
     private SharedPreferences preferences;
-    private String memberId;
+    private String memberName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +59,18 @@ public class OrderActivity extends AppCompatActivity {
         preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);
         
         //랜덤 아이디 생성 + SharedPreferences에 저장 없으면 아이디생성 있으면 아이디 토스트로 띄우기만
-        memberId = preferences.getString("memberId","");
-        if(memberId.equals("")){
+        memberName = preferences.getString("memberName","");
+        if(memberName.equals("")){
             Toast.makeText(getApplicationContext(),"아이디없음",Toast.LENGTH_SHORT).show();
             SharedPreferences.Editor editor = preferences.edit();
             UUID uniqueId = UUID.randomUUID();
-            String newId = uniqueId.toString() + "_memberId";
-            editor.putString("memberId",newId);
+            String newId = uniqueId.toString() + "_memberName";
+            editor.putString("memberName",newId);
             editor.commit();
-            memberId = preferences.getString("memberId","");
-            Toast.makeText(getApplicationContext(),memberId,Toast.LENGTH_SHORT).show();
+            memberName = preferences.getString("memberName","");
+            Toast.makeText(getApplicationContext(),memberName,Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(getApplicationContext(),memberId,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),memberName,Toast.LENGTH_SHORT).show();
         }
 
         //recyclerview menu setting
@@ -138,7 +138,7 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 orderList = orderAdapter.getOrderList();
-                OrderInfo orderInfo = new OrderInfo("주문접수",orderList,new Shop(shopid),memberId);
+                OrderInfo orderInfo = new OrderInfo("주문접수",orderList,new Shop(shopid),memberName,totalPrice);
                 Call<Void> call = orderService.save(orderInfo);
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -153,6 +153,13 @@ public class OrderActivity extends AppCompatActivity {
                         Log.d("테스트", "onResponse: 실패");
                     }
                 });
+            }
+        });//주문하기 버튼 종료
+        binding.testbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), OrderStatusActivity.class);
+                startActivity(intent);
             }
         });
     }

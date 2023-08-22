@@ -71,5 +71,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView" />
 
+    <Button
+        android:id="@+id/testbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="테스트버튼"
+        app:layout_constraintStart_toEndOf="@+id/btnOrder"
+        app:layout_constraintTop_toTopOf="@+id/btnOrder" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

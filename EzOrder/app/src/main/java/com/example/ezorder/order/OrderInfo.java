@@ -7,7 +7,9 @@ public class OrderInfo {
     private String orderStatus;
     private List<OrderCount> orderList;
     private Shop shop;
-    private String memberId;
+    private String memberName;
+    private int totPrice;
+
     public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
@@ -20,11 +22,12 @@ public class OrderInfo {
         this.shop = shop;
     }
 
-    public OrderInfo(String orderStatus, List<OrderCount> orderList,Shop shop,String memberId) {
+    public OrderInfo(String orderStatus, List<OrderCount> orderList,Shop shop,String memberName,int totPrice) {
         this.orderStatus = orderStatus;
         this.orderList = orderList;
         this.shop = shop;
-        this.memberId = memberId;
+        this.memberName = memberName;
+        this.totPrice = totPrice;
     }
 
     public long getOrderId() {
@@ -51,11 +54,19 @@ public class OrderInfo {
         this.orderList = orderList;
     }
 
-    public String getMemberId() {
-        return memberId;
+    public String getmemberName() {
+        return memberName;
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
+    public void setmemberName(String memberName) {
+        this.memberName = memberName;
+    }
+
+    public int getTotPrice() {
+        return totPrice;
+    }
+
+    public void setTotPrice(int totPrice) {
+        this.totPrice = totPrice;
     }
 }

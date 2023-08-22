@@ -27,13 +27,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view3" />
 
-    <EditText
-        android:id="@+id/editCount"
-        android:layout_width="55dp"
-        android:layout_height="50dp"
+    <TextView
+        android:id="@+id/txtCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="60dp"
-        android:ems="10"
-        android:inputType="number"
+        android:text="0"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/txtMenuName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +45,7 @@
         android:layout_marginEnd="16dp"
         android:text="X"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editCount"
-        app:layout_constraintEnd_toStartOf="@+id/editCount"
-        app:layout_constraintTop_toTopOf="@+id/editCount" />
+        app:layout_constraintBottom_toBottomOf="@+id/txtCount"
+        app:layout_constraintEnd_toStartOf="@+id/txtCount"
+        app:layout_constraintTop_toTopOf="@+id/txtCount" />
 </androidx.constraintlayout.widget.ConstraintLayout>

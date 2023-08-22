@@ -1,5 +1,7 @@
 package com.example.ezprder.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,6 +26,9 @@ public class OrderService {
 			OrderCount o = new OrderCount(orderCount.getMenu(), orderCount.getCount(),nowOrderInfo);
 			orderCountRepository.save(o);
 		}
+	}
+	public List<OrderInfo> findByMemberId(String memberName){
+		return orderInfoRepository.findByMemberName(memberName);
 	}
 	
 }

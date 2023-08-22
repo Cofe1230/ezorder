@@ -14,15 +14,26 @@ import java.util.ArrayList;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
     private ArrayList<OrderCount> orderList;
+    private OnRemoveBtnClickListener onRemoveBtnClickListener;
 
     //생성자
     public OrderAdapter(ArrayList<OrderCount> orderList) {
         this.orderList = orderList;
     }
 
+    //setter
+    public void setOnRemoveBtnClickListener(OnRemoveBtnClickListener onRemoveBtnClickListener) {
+        this.onRemoveBtnClickListener = onRemoveBtnClickListener;
+    }
+
     //getter
     public ArrayList<OrderCount> getOrderList() {
         return orderList;
+    }
+
+    //clicklistener interface
+    public interface OnRemoveBtnClickListener{
+        void onRemoveBtnClick(int position, int price);
     }
 
     /////////////////
@@ -36,6 +47,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         orderList.set(pos,orderCount);
         notifyDataSetChanged();
     }
+    //삭제
+    public void removeItem(int pos){
+        orderList.remove(pos);
+        notifyDataSetChanged();
+    }
 
     //oncreate
     @NonNull
@@ -47,8 +63,21 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     @Override
     public void onBindViewHolder(@NonNull OrderAdapter.OrderViewHolder holder,@SuppressLint("RecyclerView") int position) {
+        OrderCount orderCount = orderList.get(position);
         holder.binding.txtMenuName.setText(orderList.get(position).getMenu().getMenuName());
         holder.binding.txtCount.setText(Integer.toString(orderList.get(position).getCount()));
+        holder.binding.btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRemoveBtnClickListener.onRemoveBtnClick(position,orderList.get(position).getMenu().getPrice());
+                if(orderCount.getCount()==1){
+                    removeItem(position);
+                }else{
+                    orderList.get(position).setCount(orderCount.getCount()-1);
+                    holder.binding.txtCount.setText(Integer.toString(orderList.get(position).getCount()));
+                }
+            }
+        });
     }
 
     @Override

@@ -1,5 +1,10 @@
 package com.example.ezprder.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +27,11 @@ public class OrderController {
 	public void save(@RequestBody OrderInfo orderInfo){
 		OrderInfo o = new OrderInfo(orderInfo);
 		orderService.save(orderInfo);
+	}
+	//memberId로 주문정보 리스트
+	@GetMapping("list/{memberName}")
+	public List<OrderInfo> OrderInfoListByMemberId(@PathVariable String memberName){
+		
+		return orderService.findByMemberId(memberName);
 	}
 }

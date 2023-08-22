@@ -22,10 +22,6 @@ public class MenuController {
 	//가게당 메뉴 가져오기
 	@GetMapping("list/{shopid}")
 	public List<Menu> findByShop(@PathVariable long shopid){
-		List<Menu> m =menuService.findByShop(shopid);
-		for(Menu l : m) {
-			System.out.println(l.getMenuName());
-		}
-		return m;
+		return menuService.findByShop(shopid);
 	}
 }

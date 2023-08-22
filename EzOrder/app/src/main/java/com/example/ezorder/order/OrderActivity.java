@@ -155,6 +155,16 @@ public class OrderActivity extends AppCompatActivity {
                 });
             }
         });//주문하기 버튼 종료
+
+        //item 삭제 버튼 클릭
+        orderAdapter.setOnRemoveBtnClickListener(new OrderAdapter.OnRemoveBtnClickListener() {
+            @Override
+            public void onRemoveBtnClick(int position, int price) {
+                totalPrice-=price;
+                binding.txtTotalPrice.setText(totalPrice+"원");
+
+            }
+        });
         binding.testbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

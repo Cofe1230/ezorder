@@ -7,7 +7,7 @@ public class OrderInfo {
     private String orderStatus;
     private List<OrderCount> orderList;
     private Shop shop;
-
+    private String memberId;
     public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
@@ -20,10 +20,11 @@ public class OrderInfo {
         this.shop = shop;
     }
 
-    public OrderInfo(String orderStatus, List<OrderCount> orderList,Shop shop) {
+    public OrderInfo(String orderStatus, List<OrderCount> orderList,Shop shop,String memberId) {
         this.orderStatus = orderStatus;
         this.orderList = orderList;
         this.shop = shop;
+        this.memberId = memberId;
     }
 
     public long getOrderId() {
@@ -48,5 +49,13 @@ public class OrderInfo {
 
     public void setOrderList(List<OrderCount> orderList) {
         this.orderList = orderList;
+    }
+
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 }

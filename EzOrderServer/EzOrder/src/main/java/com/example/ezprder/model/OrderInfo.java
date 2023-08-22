@@ -36,6 +36,7 @@ public class OrderInfo {
 	public OrderInfo(OrderInfo orderInfo) {
 		orderStatus = orderInfo.getOrderStatus();
 	}
+	private String memberId;
 //	@OneToMany(cascade = CascadeType.ALL)
 //	@CollectionTable(name="order_item_mapping",
 //			joinColumns = {@JoinColumn(name="order_id",referencedColumnName = "id")})

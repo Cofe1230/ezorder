@@ -19,7 +19,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".order.OrderStatusActivity"
+            android:name=".orderstatus.OrderStatusActivity"
             android:exported="false" />
         <activity
             android:name=".order.OrderActivity"

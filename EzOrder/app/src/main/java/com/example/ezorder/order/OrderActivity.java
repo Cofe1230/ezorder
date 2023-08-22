@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,12 +13,12 @@ import android.widget.Toast;
 
 
 import com.example.ezorder.EzOrderClient;
-import com.example.ezorder.R;
 import com.example.ezorder.databinding.ActivityOrderBinding;
-import com.google.android.material.tabs.TabLayout;
+import com.example.ezorder.orderstatus.OrderStatusActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 import retrofit2.Call;
@@ -29,6 +30,8 @@ public class OrderActivity extends AppCompatActivity {
     private ArrayList<Menu> menuList = new ArrayList<>();
     private ArrayList<OrderCount> orderList = new ArrayList<>();
     private int totalPrice;//전체가격
+    private SharedPreferences preferences;
+    private String memberId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,22 @@ public class OrderActivity extends AppCompatActivity {
 
         MenuAdapter menuAdapter = new MenuAdapter(menuList);
         OrderAdapter orderAdapter = new OrderAdapter(orderList);
+        preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);
+        
+        //랜덤 아이디 생성 + SharedPreferences에 저장 없으면 아이디생성 있으면 아이디 토스트로 띄우기만
+        memberId = preferences.getString("memberId","");
+        if(memberId.equals("")){
+            Toast.makeText(getApplicationContext(),"아이디없음",Toast.LENGTH_SHORT).show();
+            SharedPreferences.Editor editor = preferences.edit();
+            UUID uniqueId = UUID.randomUUID();
+            String newId = uniqueId.toString() + "_memberId";
+            editor.putString("memberId",newId);
+            editor.commit();
+            memberId = preferences.getString("memberId","");
+            Toast.makeText(getApplicationContext(),memberId,Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplicationContext(),memberId,Toast.LENGTH_SHORT).show();
+        }
 
         //recyclerview menu setting
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderActivity.this,RecyclerView.VERTICAL,false);
@@ -109,15 +128,17 @@ public class OrderActivity extends AppCompatActivity {
                     totalPrice+=menuList.get(pos).getPrice();
                     binding.txtTotalPrice.setText(totalPrice+" 원");
                 }
+
             }
         });
+
 
         //주문하기 버튼 클릭
         binding.btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 orderList = orderAdapter.getOrderList();
-                OrderInfo orderInfo = new OrderInfo("주문접수",orderList,new Shop(shopid));
+                OrderInfo orderInfo = new OrderInfo("주문접수",orderList,new Shop(shopid),memberId);
                 Call<Void> call = orderService.save(orderInfo);
                 call.enqueue(new Callback<Void>() {
                     @Override

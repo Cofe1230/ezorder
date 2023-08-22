@@ -1,4 +1,4 @@
-package com.example.ezorder.order;
+package com.example.ezorder.orderstatus;
 
 import androidx.appcompat.app.AppCompatActivity;
 

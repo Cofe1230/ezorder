@@ -32,6 +32,7 @@ public class OrderActivity extends AppCompatActivity {
     private int totalPrice;//전체가격
     private SharedPreferences preferences;
     private String memberName;
+    private long shopid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,9 @@ public class OrderActivity extends AppCompatActivity {
 
         //TestMenu(DB구성시 삭제) menu: id, name, price, imgname
 //        Shop shop = new Shop(1,"1",1,1,"1");
-        long shopid = 1;
+
+        Intent orderIntent = getIntent();
+        shopid = orderIntent.getLongExtra("shopId",2);
 //        menuList.add(new Menu(1,"아메리카노",1500,"1"));
 //        menuList.add(new Menu(2,"카페라떼",3000,"1"));
 //        menuList.add(new Menu(3,"카푸치노",3000,"1"));

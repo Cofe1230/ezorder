@@ -28,7 +28,7 @@ public class OrderService {
 		}
 	}
 	public List<OrderInfo> findByMemberId(String memberName){
-		return orderInfoRepository.findByMemberName(memberName);
+		return orderInfoRepository.findByMemberNameOrderByOrderIdDesc(memberName);
 	}
 	
 }

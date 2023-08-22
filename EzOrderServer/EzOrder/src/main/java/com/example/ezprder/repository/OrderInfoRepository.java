@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.ezprder.model.OrderInfo;
 
 public interface OrderInfoRepository extends JpaRepository<OrderInfo, Long> {
-	List<OrderInfo> findByMemberName(String memberName);
+	List<OrderInfo> findByMemberNameOrderByOrderIdDesc(String memberName);
 }

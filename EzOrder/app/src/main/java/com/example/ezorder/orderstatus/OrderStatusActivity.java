@@ -30,7 +30,7 @@ public class OrderStatusActivity extends AppCompatActivity {
         binding = ActivityOrderStatusBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         //주문상태 가게사진 가게이름 주문내용 총가격
-        OrderStatusAdapter orderStatusAdapter = new OrderStatusAdapter();
+        OrderStatusAdapter orderStatusAdapter = new OrderStatusAdapter(this);
         OrderService orderService = EzOrderClient.getInstance().getOrderService();
         SharedPreferences preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);
         memberName = preferences.getString("memberName","");

@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="아메리카노 1개"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/ivShop"
         app:layout_constraintStart_toStartOf="@+id/txtShopName" />
 
@@ -58,9 +58,10 @@
         android:id="@+id/txtTotPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:text="00000원"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/txtOrderMenu1" />
+        app:layout_constraintTop_toBottomOf="@+id/txtOrderMenu1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

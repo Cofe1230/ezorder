@@ -4,6 +4,8 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
+    //fcm
+    id("com.google.gms.google-services")
 }
 //gitignore
 val properties = Properties().apply { load(FileInputStream(File(rootProject.rootDir, "local.properties")))}
@@ -62,8 +64,7 @@ dependencies {
     //glide(그림)
     implementation("com.github.bumptech.glide:glide:4.11.0")
     //fcm
+    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-messaging:21.1.0")
 }
-//fcm
-apply(plugin = "com.google.gms.google-services")
-

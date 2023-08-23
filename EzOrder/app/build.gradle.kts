@@ -5,6 +5,7 @@ import java.util.Properties
 plugins {
     id("com.android.application")
 }
+//gitignore
 val properties = Properties().apply { load(FileInputStream(File(rootProject.rootDir, "local.properties")))}
 
 android {
@@ -20,7 +21,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-
+        //gitignore
         buildConfigField("String", "NAVER_MAP_ID", properties.getProperty("NAVER_MAP_ID"))
         resValue("string","NAVER_MAP_ID",properties.getProperty("NAVER_MAP_ID"))
     }
@@ -58,7 +59,11 @@ dependencies {
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    //glide
+    //glide(그림)
     implementation("com.github.bumptech.glide:glide:4.11.0")
+    //fcm
+    implementation("com.google.firebase:firebase-messaging:21.1.0")
 }
+//fcm
+apply(plugin = "com.google.gms.google-services")
 

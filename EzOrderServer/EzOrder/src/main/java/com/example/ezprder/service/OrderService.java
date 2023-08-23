@@ -27,6 +27,8 @@ public class OrderService {
 			orderCountRepository.save(o);
 		}
 	}
+	
+	//최신(가장 주문번호가 큰)순서대로 정렬해서 memberName기준으로 주문내역 불러오기
 	public List<OrderInfo> findByMemberId(String memberName){
 		return orderInfoRepository.findByMemberNameOrderByOrderIdDesc(memberName);
 	}

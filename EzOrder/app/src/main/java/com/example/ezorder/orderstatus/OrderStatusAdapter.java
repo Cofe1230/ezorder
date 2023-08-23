@@ -55,7 +55,7 @@ public class OrderStatusAdapter extends RecyclerView.Adapter<OrderStatusAdapter.
         }else{
             holder.binding.txtOrderMenu1.setText(menuName+" "+menuCount+"개");
         }
-
+        //주문내역 클릭시 해당 가게 메뉴로 가기
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

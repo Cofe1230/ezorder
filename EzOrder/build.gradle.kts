@@ -2,3 +2,9 @@
 plugins {
     id("com.android.application") version "8.1.0" apply false
 }
+//fcm
+buildscript{
+    dependencies{
+        classpath("com.google.gms:google-services:4.3.5")
+    }
+}

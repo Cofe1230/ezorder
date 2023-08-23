@@ -1,5 +1,6 @@
 package com.example.ezorder;
 
+import com.example.ezorder.member.MemberService;
 import com.example.ezorder.order.MenuService;
 import com.example.ezorder.order.OrderService;
 
@@ -11,6 +12,7 @@ public class EzOrderClient {
     private static EzOrderClient instance;
     private OrderService orderService;
     private MenuService menuService;
+    private MemberService memberService;
 
     public static EzOrderClient getInstance(){
         if(instance==null){
@@ -27,6 +29,7 @@ public class EzOrderClient {
         //orderSerive : 가게에서 주문 관련된 서비스(order/OrderService)
         orderService = retrofit.create(OrderService.class);
         menuService = retrofit.create(MenuService.class);
+        memberService = retrofit.create(MemberService.class);
     }
     //getter
     public OrderService getOrderService() {
@@ -35,5 +38,9 @@ public class EzOrderClient {
 
     public MenuService getMenuService() {
         return menuService;
+    }
+
+    public MemberService getMemberService() {
+        return memberService;
     }
 }

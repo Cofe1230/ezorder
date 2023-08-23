@@ -1,5 +1,6 @@
 package com.example.ezorder.order;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +14,15 @@ import android.widget.Toast;
 
 
 import com.example.ezorder.EzOrderClient;
+import com.example.ezorder.R;
 import com.example.ezorder.databinding.ActivityOrderBinding;
+import com.example.ezorder.member.Member;
+import com.example.ezorder.member.MemberService;
 import com.example.ezorder.orderstatus.OrderStatusActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +40,7 @@ public class OrderActivity extends AppCompatActivity {
     private int totalPrice;//전체가격
     private SharedPreferences preferences;
     private String memberName;
+    private Member member;
     private long shopid;
 
     @Override
@@ -57,6 +66,26 @@ public class OrderActivity extends AppCompatActivity {
 //        menuList.add(new Menu(3,"카푸치노",3000,"1"));
 //        menuList.add(new Menu(4,"카라멜 마끼아또",4000,"1"));
 
+        //test
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("awevfaeaefa", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d("awevfaeaefa", msg);
+                        Toast.makeText(OrderActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         MenuAdapter menuAdapter = new MenuAdapter(menuList);
         OrderAdapter orderAdapter = new OrderAdapter(orderList);
         preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);
@@ -67,14 +96,34 @@ public class OrderActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"아이디없음",Toast.LENGTH_SHORT).show();
             SharedPreferences.Editor editor = preferences.edit();
             UUID uniqueId = UUID.randomUUID();
+
             String newId = uniqueId.toString() + "_memberName";
             editor.putString("memberName",newId);
             editor.commit();
             memberName = preferences.getString("memberName","");
             Toast.makeText(getApplicationContext(),memberName,Toast.LENGTH_SHORT).show();
+            Log.d("awevfaeaefa", "onCreate member: ");
+            
+            //memberName db입력
+            Call<Void> call = EzOrderClient.getInstance().getMemberService().saveMember(memberName);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
+
         }else{
             Toast.makeText(getApplicationContext(),memberName,Toast.LENGTH_SHORT).show();
         }
+        member = new Member(memberName);
+
+
 
         //recyclerview menu setting
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderActivity.this,RecyclerView.VERTICAL,false);
@@ -141,7 +190,7 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 orderList = orderAdapter.getOrderList();
-                OrderInfo orderInfo = new OrderInfo("주문접수",orderList,new Shop(shopid),memberName,totalPrice);
+                OrderInfo orderInfo = new OrderInfo("주문접수",orderList,new Shop(shopid),member,totalPrice);
                 Call<Void> call = orderService.save(orderInfo);
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -168,11 +217,19 @@ public class OrderActivity extends AppCompatActivity {
 
             }
         });
+
+        //테스트버튼
         binding.testbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), OrderStatusActivity.class);
                 startActivity(intent);
+            }
+        });
+        binding.test2btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseMessaging.getInstance().deleteToken();
             }
         });
     }

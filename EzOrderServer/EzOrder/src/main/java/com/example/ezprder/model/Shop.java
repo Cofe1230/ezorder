@@ -35,4 +35,5 @@ public class Shop {
 	@OneToMany(mappedBy = "shop",cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("shop")
 	private List<OrderInfo> orderList;
+	private String token;
 }

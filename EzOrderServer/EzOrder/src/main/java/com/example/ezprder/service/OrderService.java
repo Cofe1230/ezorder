@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.ezprder.model.Member;
 import com.example.ezprder.model.OrderCount;
 import com.example.ezprder.model.OrderInfo;
 import com.example.ezprder.repository.OrderCountRepository;
@@ -29,8 +30,9 @@ public class OrderService {
 	}
 	
 	//최신(가장 주문번호가 큰)순서대로 정렬해서 memberName기준으로 주문내역 불러오기
-	public List<OrderInfo> findByMemberId(String memberName){
-		return orderInfoRepository.findByMemberNameOrderByOrderIdDesc(memberName);
+	public List<OrderInfo> findByMemberId(Member member){
+		
+		return orderInfoRepository.findByMemberOrderByOrderIdDesc(member);
 	}
 	
 }

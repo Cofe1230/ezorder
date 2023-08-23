@@ -1,5 +1,7 @@
 package com.example.ezorder.order;
 
+import com.example.ezorder.member.Member;
+
 import java.util.List;
 
 public class OrderInfo {
@@ -7,7 +9,7 @@ public class OrderInfo {
     private String orderStatus;
     private List<OrderCount> orderList;
     private Shop shop;
-    private String memberName;
+    private Member member;
     private int totPrice;
 
     public void setOrderId(long orderId) {
@@ -22,11 +24,11 @@ public class OrderInfo {
         this.shop = shop;
     }
 
-    public OrderInfo(String orderStatus, List<OrderCount> orderList,Shop shop,String memberName,int totPrice) {
+    public OrderInfo(String orderStatus, List<OrderCount> orderList,Shop shop,Member member,int totPrice) {
         this.orderStatus = orderStatus;
         this.orderList = orderList;
         this.shop = shop;
-        this.memberName = memberName;
+        this.member = member;
         this.totPrice = totPrice;
     }
 
@@ -54,12 +56,12 @@ public class OrderInfo {
         this.orderList = orderList;
     }
 
-    public String getmemberName() {
-        return memberName;
+    public Member getMember() {
+        return member;
     }
 
-    public void setmemberName(String memberName) {
-        this.memberName = memberName;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public int getTotPrice() {

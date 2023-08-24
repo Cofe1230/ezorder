@@ -79,13 +79,5 @@
         app:layout_constraintStart_toEndOf="@+id/btnOrder"
         app:layout_constraintTop_toTopOf="@+id/btnOrder" />
 
-    <Button
-        android:id="@+id/test2btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="토큰삭제"
-        app:layout_constraintEnd_toStartOf="@+id/btnOrder"
-        app:layout_constraintTop_toTopOf="@+id/btnOrder" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

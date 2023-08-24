@@ -38,7 +38,6 @@ public class OrderActivity extends AppCompatActivity {
     private ArrayList<Menu> menuList = new ArrayList<>();
     private ArrayList<OrderCount> orderList = new ArrayList<>();
     private int totalPrice;//전체가격
-    private SharedPreferences preferences;
     private String memberName;
     private Member member;
     private long shopid;
@@ -88,39 +87,10 @@ public class OrderActivity extends AppCompatActivity {
 
         MenuAdapter menuAdapter = new MenuAdapter(menuList);
         OrderAdapter orderAdapter = new OrderAdapter(orderList);
-        preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);
         
         //랜덤 아이디 생성 + SharedPreferences에 저장 없으면 아이디생성 있으면 아이디 토스트로 띄우기만
         memberName = preferences.getString("memberName","");
-        if(memberName.equals("")){
-            Toast.makeText(getApplicationContext(),"아이디없음",Toast.LENGTH_SHORT).show();
-            SharedPreferences.Editor editor = preferences.edit();
-            UUID uniqueId = UUID.randomUUID();
-
-            String newId = uniqueId.toString() + "_memberName";
-            editor.putString("memberName",newId);
-            editor.commit();
-            memberName = preferences.getString("memberName","");
-            Toast.makeText(getApplicationContext(),memberName,Toast.LENGTH_SHORT).show();
-            Log.d("awevfaeaefa", "onCreate member: ");
-            
-            //memberName db입력
-            Call<Void> call = EzOrderClient.getInstance().getMemberService().saveMember(memberName);
-            call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-
-                }
-            });
-
-        }else{
-            Toast.makeText(getApplicationContext(),memberName,Toast.LENGTH_SHORT).show();
-        }
         member = new Member(memberName);
 
 
@@ -226,11 +196,6 @@ public class OrderActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        binding.test2btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseMessaging.getInstance().deleteToken();
-            }
-        });
+
     }
 }

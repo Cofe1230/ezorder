@@ -36,4 +36,5 @@ public class Shop {
 	@JsonIgnoreProperties("shop")
 	private List<OrderInfo> orderList;
 	private String token;
+	
 }

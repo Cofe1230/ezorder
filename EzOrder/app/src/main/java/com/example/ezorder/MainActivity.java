@@ -1,55 +1,317 @@
 package com.example.ezorder;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 //중요
 
 
+import com.example.ezorder.databinding.ActivityMainBinding;
+import com.example.ezorder.order.OrderActivity;
+import com.example.ezorder.order.Shop;
+import com.example.ezorder.shop.ShopService;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.util.MarkerIcons;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-
-//    MapView mapView;
-//    NaverMap naverMap;
-   // ViewGroup mapViewContainer;
-
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private static final String TAG = "MainActivity";
+    public static double CURRENT_LOC_LAT;
+    public static double CURRENT_LOC_LON;
+    private MapView mapView;
+    private TextView txtName;
+    private ImageView ivShop;
+    private static NaverMap naverMap;
+    private ArrayList<Shop> shops = new ArrayList<>();
+    private long recentShopId;
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Toast.makeText(this, "Notifications permission granted",Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    Toast.makeText(this, "FCM can't post notifications without POST_NOTIFICATIONS permission",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //mapView = new MapView(this);
+        setContentView(binding.getRoot());
 
-        //ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-        //mapViewContainer.addView(mapView);
-        //mapView = findViewById(R.id.mapView);
-//        Marker marker = new Marker();
-//        marker.setPosition(new LatLng(37.5670135, 126.9783740));
-//        marker.setMap(naverMap);
-//        FragmentManager fm = getSupportFragmentManager();
-//        MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map);
-//        if (mapFragment == null) {
-//            mapFragment = MapFragment.newInstance();
-//            fm.beginTransaction().add(R.id.map, mapFragment).commit();
-//        }
-//
-//        mapFragment.getMapAsync(this);
+        //네이버 지도
+        mapView = findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
 
+        txtName = findViewById(R.id.txtName);
+        ivShop = findViewById(R.id.ivShop);
+
+        //test 현재위치
+        CURRENT_LOC_LAT = 35.1560157;
+        CURRENT_LOC_LON = 129.0594088;
+
+        SharedPreferences preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);
+        String memberName = preferences.getString("memberName","");
+
+        if(memberName.equals("")){
+            Log.d(TAG, "아이디 없음 아이디 생성 :");
+            SharedPreferences.Editor editor = preferences.edit();
+            UUID uniqueId = UUID.randomUUID();
+
+            String newId = uniqueId.toString() + "_memberName";
+            editor.putString("memberName",newId);
+            editor.commit();
+            memberName = preferences.getString("memberName","");
+            Log.d(TAG, "onCreate member: " + memberName);
+
+            //memberName db입력
+            Call<Void> call = EzOrderClient.getInstance().getMemberService().saveMember(memberName);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
+
+        }
+
+        //알림 채널 생성
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create channel to show notifications.
+            String channelId  = getString(R.string.default_notification_channel_id);
+            String channelName = getString(R.string.default_notification_channel_name);
+            NotificationManager notificationManager =
+                    getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
+                    channelName, NotificationManager.IMPORTANCE_LOW));
+        }
+        //알림 정보
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                Object value = getIntent().getExtras().get(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+            }
+        }
+
+        //shop 전체 list 불러오기
+        Call<List<Shop>> call = EzOrderClient.getInstance().getShopService().findAll();
+        call.enqueue(new Callback<List<Shop>>() {
+            @Override
+            public void onResponse(Call<List<Shop>> call, Response<List<Shop>> response) {
+                for(Shop shop : response.body()){
+                    shops.add(shop);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Shop>> call, Throwable t) {
+
+            }
+        });
+
+        //가게 클릭
+        binding.linearLayoutshop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+                intent.putExtra("shopId",recentShopId);
+                startActivity(intent);
+            }
+        });
+
+        //알림허가
+        askNotificationPermission();
+
+    }//[onCreate End]
+    //지도
+    @Override
+    public void onMapReady(@NonNull NaverMap naverMap) {
+        this.naverMap = naverMap;
+
+        //배경 지도 선택
+        naverMap.setMapType(NaverMap.MapType.Basic);
+
+
+        //건물 표시
+        naverMap.setLayerGroupEnabled(naverMap.LAYER_GROUP_BUILDING, true);
+
+        //위치 및 각도 조정
+        CameraPosition cameraPosition = new CameraPosition(
+                new LatLng(CURRENT_LOC_LAT, CURRENT_LOC_LON),   // 위치 지정
+                15,                                     // 줌 레벨
+                0,                                       // 기울임 각도
+                0                                     // 방향
+        );
+        naverMap.setCameraPosition(cameraPosition);
+
+        //CustomMarker customMarker = new CustomMarker(shop1,CustomMarker.CURRENT);
+        //로컬(현위치)
+        setMarker(CURRENT_LOC_LAT, CURRENT_LOC_LON);
+
+        for (Shop shop : shops) {
+            setMarker(shop.getLatitude(),shop.getLongitude(), shops.indexOf(shop));
+        }
     }
 
+    //지도 마커 set
+    private void setMarker(Marker marker,
+                           double lat, double lng) {
+        setMarker(marker, lat, lng, 0);
+    }
+
+    private void setMarker(double lat, double lng) {
+        setMarker(new Marker(), lat, lng, 0);
+    }
+
+    //제일 많이쓰일듯
+    private void setMarker(double lat, double lng, int shopID) {
+        setMarker(new Marker(), lat, lng, shopID);
+    }
+
+    private void setMarker(Marker marker,
+                           double lat, double lng,
+                           int shopID) {
+
+        if (shopID==0) marker.setIcon(MarkerIcons.RED);
+        else marker.setIcon(MarkerIcons.GRAY);
+
+        marker.setCaptionText(shops.get(shopID).getShopName());
+        //마커의 투명도
+        marker.setAlpha(0.8f);
+        //마커 위치
+        marker.setPosition(new LatLng(lat, lng));
+        //마커 우선순위
+        //marker.setZIndex(zIndex);
+        //마커 표시
+        marker.setMap(naverMap);
+
+        marker.setOnClickListener(overlay -> {
+            txtName.setText(marker.getCaptionText());
+            marker.setIcon(MarkerIcons.BLACK);
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_launcher_foreground, null);
+            ivShop.setImageDrawable(drawable);
+            recentShopId = shops.get(shopID).getShopId();
+            Log.d(TAG, "setMarker: "+shopID);
+            return true;
+        });
+    }
+    //[마커set 종료]
+    
+    //생명주기 map관리
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+    //알림 허가
+    private void askNotificationPermission() {
+        // This is only necessary for API Level > 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                // FCM SDK (and your app) can post notifications.
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
 }
+
+/*현재 위치 받아오는 방법
+LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        double longitude = location.getLongitude();
+        double latitude = location.getLatitude();
+        Toast.makeText(getApplicationContext(),
+                "경도: "+longitude+ " / 위도: "+latitude,
+                Toast.LENGTH_SHORT).show();
+ */

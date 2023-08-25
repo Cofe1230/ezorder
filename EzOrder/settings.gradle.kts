@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "EzOrder"
 include(":app")
+

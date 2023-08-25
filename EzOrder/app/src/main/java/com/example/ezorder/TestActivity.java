@@ -19,6 +19,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.ezorder.databinding.ActivityTestBinding;
+import com.example.ezorder.fcm.FcmClient;
+import com.example.ezorder.fcm.MyFcmPostService;
+import com.example.ezorder.fcm.NotificationBody;
 import com.example.ezorder.order.OrderActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,6 +29,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.UUID;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -141,6 +145,30 @@ public class TestActivity extends AppCompatActivity {
                                 Toast.makeText(TestActivity.this, msg, Toast.LENGTH_SHORT).show();
                             }
                         });
+            }
+        });
+        //fcm전송테스트
+        binding.fcmtest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyFcmPostService myFcmPostService = FcmClient.getInstance().getMyFcmPostService();
+                String token = "fJTuuDiIQlWSUv_XmcobHy:APA91bGESlZBCqaiDKpzC5UwscDKF5yQk0X_nzxZrcqhEAG_r5gRoR-vOyk0ZUDB_i8XE1ZeVApchGYqQt86TROPPMcVMx35GKrUa2HdSAmlhGrZKbuIbs_bepNhc3Pm_wc-5O6ZWbYC";
+                NotificationBody notificationBody = new NotificationBody(token,
+                        "high",new NotificationBody.NotificationData("test01","test01"),new NotificationBody.NotificationData("test01","test01"));
+                Call<ResponseBody> call = myFcmPostService.postNotification(notificationBody);
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Log.d(TAG, "onResponse: " + response.body());
+                        Toast.makeText(getApplicationContext(),"메시지전송",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.d(TAG, "onFailure: ");
+                    }
+                });
+
             }
         });
 

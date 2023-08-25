@@ -25,7 +25,11 @@ android {
 
         //gitignore
         buildConfigField("String", "NAVER_MAP_ID", properties.getProperty("NAVER_MAP_ID"))
+        buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL"))
+        buildConfigField("String", "SERVER_KEY", properties.getProperty("SERVER_KEY"))
+        buildConfigField("String", "CONTENT_TYPE", properties.getProperty("CONTENT_TYPE"))
         resValue("string","NAVER_MAP_ID",properties.getProperty("NAVER_MAP_ID"))
+
     }
 
     buildTypes {

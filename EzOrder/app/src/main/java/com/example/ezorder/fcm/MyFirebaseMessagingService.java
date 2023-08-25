@@ -64,10 +64,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    @Override
-    public void onMessageSent(@NonNull String s) {
-        super.onMessageSent(s);
-    }
+
     //토큰 db저장
     private void sendRegistrationToServer(String token){
         SharedPreferences preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);

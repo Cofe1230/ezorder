@@ -3,6 +3,7 @@ package com.example.ezorder;
 import com.example.ezorder.member.MemberService;
 import com.example.ezorder.order.MenuService;
 import com.example.ezorder.order.OrderService;
+import com.example.ezorder.shop.ShopService;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -13,6 +14,7 @@ public class EzOrderClient {
     private OrderService orderService;
     private MenuService menuService;
     private MemberService memberService;
+    private ShopService shopService;
 
     public static EzOrderClient getInstance(){
         if(instance==null){
@@ -30,6 +32,7 @@ public class EzOrderClient {
         orderService = retrofit.create(OrderService.class);
         menuService = retrofit.create(MenuService.class);
         memberService = retrofit.create(MemberService.class);
+        shopService = retrofit.create(ShopService.class);
     }
     //getter
     public OrderService getOrderService() {
@@ -42,5 +45,9 @@ public class EzOrderClient {
 
     public MemberService getMemberService() {
         return memberService;
+    }
+
+    public ShopService getShopService() {
+        return shopService;
     }
 }

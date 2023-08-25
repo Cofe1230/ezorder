@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "EzOrder"
 include(":app")
 
+include(":cafemanager")

@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ImageView ivShop;
     private static NaverMap naverMap;
     private ArrayList<Shop> shops = new ArrayList<>();
+    private ArrayList<Marker> markers = new ArrayList<>();
     private long recentShopId;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -191,10 +192,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //CustomMarker customMarker = new CustomMarker(shop1,CustomMarker.CURRENT);
         //로컬(현위치)
-        setMarker(CURRENT_LOC_LAT, CURRENT_LOC_LON);
-
         for (Shop shop : shops) {
-            setMarker(shop.getLatitude(),shop.getLongitude(), shops.indexOf(shop));
+            Marker marker = new Marker();
+            markers.add(marker);
+            setMarker(marker,shop.getLatitude(),shop.getLongitude(), shops.indexOf(shop));
         }
     }
 
@@ -217,8 +218,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                            double lat, double lng,
                            int shopID) {
 
-        if (shopID==0) marker.setIcon(MarkerIcons.RED);
-        else marker.setIcon(MarkerIcons.GRAY);
+        marker.setIcon(MarkerIcons.GRAY);
 
         marker.setCaptionText(shops.get(shopID).getShopName());
         //마커의 투명도
@@ -235,6 +235,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             marker.setIcon(MarkerIcons.BLACK);
             Drawable drawable = getResources().getDrawable(R.drawable.ic_launcher_foreground, null);
             ivShop.setImageDrawable(drawable);
+            for(Marker m : markers){
+                m.setIcon(MarkerIcons.GRAY);
+            }
+            marker.setIcon(MarkerIcons.GRAY);
             recentShopId = shops.get(shopID).getShopId();
             Log.d(TAG, "setMarker: "+shopID);
             return true;

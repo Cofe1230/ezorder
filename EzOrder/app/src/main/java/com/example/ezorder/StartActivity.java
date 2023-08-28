@@ -23,7 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StartActivity extends AppCompatActivity {
-    private final String TAG = "TestActivity";
+    private final String TAG = "StartActivity";
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -32,6 +32,7 @@ public class StartActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, "FCM can't post notifications without POST_NOTIFICATIONS permission",
                             Toast.LENGTH_LONG).show();
+                    finish();
                 }
             });
 

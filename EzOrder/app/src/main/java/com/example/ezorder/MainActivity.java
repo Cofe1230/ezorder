@@ -63,16 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<Shop> shops = new ArrayList<>();
     private ArrayList<Marker> markers = new ArrayList<>();
     private long recentShopId;
-    private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    Toast.makeText(this, "Notifications permission granted",Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Toast.makeText(this, "FCM can't post notifications without POST_NOTIFICATIONS permission",
-                            Toast.LENGTH_LONG).show();
-                }
-            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -91,60 +82,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         CURRENT_LOC_LAT = 35.1560157;
         CURRENT_LOC_LON = 129.0594088;
 
-        SharedPreferences preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);
-        String memberName = preferences.getString("memberName","");
-
-        if(memberName.equals("")){
-            Log.d(TAG, "아이디 없음 아이디 생성 :");
-            SharedPreferences.Editor editor = preferences.edit();
-            UUID uniqueId = UUID.randomUUID();
-
-            String newId = uniqueId.toString() + "_memberName";
-            editor.putString("memberName",newId);
-            editor.commit();
-            memberName = preferences.getString("memberName","");
-            Log.d(TAG, "onCreate member: " + memberName);
-
-            //memberName db입력
-            Call<Void> call = EzOrderClient.getInstance().getMemberService().saveMember(memberName);
-            call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-
-                }
-            });
-
-        }
-
-        //알림 채널 생성
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create channel to show notifications.
-            String channelId  = getString(R.string.default_notification_channel_id);
-            String channelName = getString(R.string.default_notification_channel_name);
-            NotificationManager notificationManager =
-                    getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_LOW));
-        }
-        //알림 정보
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                Object value = getIntent().getExtras().get(key);
-                Log.d(TAG, "Key: " + key + " Value: " + value);
-            }
-        }
 
         //shop 전체 list 불러오기
         Call<List<Shop>> call = EzOrderClient.getInstance().getShopService().findAll();
         call.enqueue(new Callback<List<Shop>>() {
             @Override
             public void onResponse(Call<List<Shop>> call, Response<List<Shop>> response) {
-                for(Shop shop : response.body()){
+                for (Shop shop : response.body()) {
                     shops.add(shop);
                 }
             }
@@ -160,15 +104,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, OrderActivity.class);
-                intent.putExtra("shopId",recentShopId);
+                intent.putExtra("shopId", recentShopId);
                 startActivity(intent);
             }
         });
 
-        //알림허가
-        askNotificationPermission();
 
     }//[onCreate End]
+
     //지도
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
@@ -195,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (Shop shop : shops) {
             Marker marker = new Marker();
             markers.add(marker);
-            setMarker(marker,shop.getLatitude(),shop.getLongitude(), shops.indexOf(shop));
+            setMarker(marker, shop.getLatitude(), shop.getLongitude(), shops.indexOf(shop));
         }
     }
 
@@ -232,45 +175,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         marker.setOnClickListener(overlay -> {
             txtName.setText(marker.getCaptionText());
-            marker.setIcon(MarkerIcons.BLACK);
-            Drawable drawable = getResources().getDrawable(R.drawable.ic_launcher_foreground, null);
-            ivShop.setImageDrawable(drawable);
-            for(Marker m : markers){
+            //######추후 수정해야함 db에서 받아온 이미지 뿌려주기
+            ivShop.setImageResource(R.drawable.logologo);
+
+            for (Marker m : markers) {
+//                if (shopID==0) m.setIcon(MarkerIcons.RED);
+//                else
                 m.setIcon(MarkerIcons.GRAY);
             }
-            marker.setIcon(MarkerIcons.GRAY);
+            marker.setIcon(MarkerIcons.BLACK);
             recentShopId = shops.get(shopID).getShopId();
-            Log.d(TAG, "setMarker: "+shopID);
             return true;
         });
     }
     //[마커set 종료]
-    
+
     //생명주기 map관리
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         mapView.onStart();
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         mapView.onResume();
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         mapView.onPause();
     }
 
     @Override
-    public void onStop()
-    {
+    public void onStop() {
         super.onStop();
         mapView.onStop();
     }
@@ -282,30 +222,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onLowMemory()
-    {
+    public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
-    }
-    //알림 허가
-    private void askNotificationPermission() {
-        // This is only necessary for API Level > 33 (TIRAMISU)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                // FCM SDK (and your app) can post notifications.
-            } else {
-                // Directly ask for the permission
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-            }
-        }
     }
 }
 

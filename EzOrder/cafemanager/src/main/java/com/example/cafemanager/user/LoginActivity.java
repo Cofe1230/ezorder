@@ -36,11 +36,13 @@ public class LoginActivity extends AppCompatActivity {
                 call.enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
-                        Log.d(TAG, "onResponse: "+response.body());
-                        //response.body() flag값 0:성공 1:실패
-                        if(response.body()==0){
-                            Log.d(TAG, "onResponse: 로그인성공");
+                        //response.body() -1:실패 or shopid
+                        if(response.body()!=-1){
+                            long shopId = response.body();
+                            Log.d(TAG, "onResponse: 로그인성공 id : "+shopId);
                             Intent intent = new Intent(LoginActivity.this, ManagementActivity.class);
+                            intent.putExtra("shopId", shopId);
+                            startActivity(intent);
                         }else{
                             Log.d(TAG, "onResponse: 로그인실패");
                         }

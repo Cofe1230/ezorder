@@ -1,5 +1,6 @@
 package com.example.cafemanager;
 
+import com.example.cafemanager.shop.ShopService;
 import com.example.cafemanager.user.UserService;
 
 import retrofit2.Retrofit;
@@ -8,6 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CafeManagerClient {
     private static CafeManagerClient instance;
     private UserService userService;
+    private ShopService shopService;
 
     public static CafeManagerClient getInstance(){
         if(instance==null){
@@ -23,10 +25,15 @@ public class CafeManagerClient {
                 .build();
         //서비스 추가
         userService = retrofit.create(UserService.class);
+        shopService = retrofit.create(ShopService.class);
     }
 
     //getter
     public UserService getUserService() {
         return userService;
+    }
+
+    public ShopService getShopService() {
+        return shopService;
     }
 }

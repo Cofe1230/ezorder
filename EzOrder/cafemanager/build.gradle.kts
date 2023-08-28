@@ -1,13 +1,20 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
+    //fcm
+    id("com.google.gms.google-services")
 }
-
+//gitignore
+val properties = Properties().apply { load(FileInputStream(File(rootProject.rootDir,"local.properties"))) }
 android {
     namespace = "com.example.cafemanager"
     compileSdk = 33
 
     buildFeatures{
         viewBinding = true
+        buildConfig = true
     }
 
     defaultConfig {
@@ -18,6 +25,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        //gitignore
+        buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL"))
+        buildConfigField("String", "SERVER_KEY", properties.getProperty("SERVER_KEY"))
+        buildConfigField("String", "CONTENT_TYPE", properties.getProperty("CONTENT_TYPE"))
     }
 
     buildTypes {
@@ -43,4 +54,14 @@ dependencies {
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    //fcm
+    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-installations-ktx:17.1.4")
+    //google worker
+    implementation("androidx.work:work-runtime:2.8.1")
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }

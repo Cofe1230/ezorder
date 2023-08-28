@@ -17,5 +17,7 @@ public class ShopService {
 	public List<Shop> findAll(){
 		return shopRepository.findAll();
 	}
-
+	public Shop findByShopId(long shopId) {
+		return shopRepository.findById(shopId).get();
+	}
 }

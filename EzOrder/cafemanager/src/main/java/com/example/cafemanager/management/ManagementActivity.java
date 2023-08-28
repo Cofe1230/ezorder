@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.cafemanager.CafeManagerClient;
@@ -53,15 +54,30 @@ public class ManagementActivity extends AppCompatActivity {
                                 // Get new FCM registration token
                                 token = task.getResult();
 
-                                // Log and toast
+                                // Log
                                 String msg = getString(R.string.msg_token_fmt, token);
                                 Log.d(TAG, msg);
+                                Log.d(TAG, "shop 토큰 : "+shop.getToken());
+                                //토큰 저장
+                                if(!shop.getToken().equals(token)){
+                                    Log.d(TAG, "onComplete: 토큰 값이 다름");
+                                    Call<Void> call = CafeManagerClient.getInstance().getShopService().updateTkn(token,shop.getShopId());
+                                    call.enqueue(new Callback<Void>() {
+                                        @Override
+                                        public void onResponse(Call<Void> call, Response<Void> response) {
+                                            Log.d(TAG, "토큰 업데이트 완료");
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Void> call, Throwable t) {
+
+                                        }
+                                    });
+
+                                }
                             }
                         });
-                if(!token.equals(shop.getToken())){
-                    Log.d(TAG, "토큰 : " + token);
-                    Log.d(TAG, "onCreate: 토큰이 같지 않음 shop token :"+shop.getToken());
-                }
+
             }
 
             @Override
@@ -69,5 +85,6 @@ public class ManagementActivity extends AppCompatActivity {
 
             }
         });
+
     }
 }

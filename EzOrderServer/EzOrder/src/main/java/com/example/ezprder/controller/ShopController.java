@@ -2,6 +2,7 @@ package com.example.ezprder.controller;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,10 @@ public class ShopController {
 	@GetMapping("view/{shopId}")
 	public Shop findByShopId(@PathVariable long shopId) {
 		return shopService.findByShopId(shopId);
+	}
+	@GetMapping("updateTkn")
+	public void updateTkn(String token,long shopId) {
+		shopService.updateTkn(shopId, token);
 	}
 
 }

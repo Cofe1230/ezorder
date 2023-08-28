@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +36,8 @@ public class Shop {
 	@OneToMany(mappedBy = "shop",cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("shop")
 	private List<OrderInfo> orderList;
-	private String token;
+	@Builder.Default
+	private String token = "none";
+	
 	
 }

@@ -31,7 +31,8 @@
         </activity>
         <activity
             android:name=".management.ManagementActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".user.LoginActivity"
             android:exported="true">

@@ -6,6 +6,7 @@ public class Shop {
     private double latitude;
     private double longitude;
     private String shopImg;
+    private String token;
 
     public Shop() {
     }
@@ -60,5 +61,13 @@ public class Shop {
 
     public void setShopImg(String shopImg) {
         this.shopImg = shopImg;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

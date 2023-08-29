@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.ezprder.model.Member;
 import com.example.ezprder.model.OrderCount;
 import com.example.ezprder.model.OrderInfo;
+import com.example.ezprder.model.Shop;
 import com.example.ezprder.repository.OrderCountRepository;
 import com.example.ezprder.repository.OrderInfoRepository;
 import com.example.ezprder.repository.ShopRepository;
@@ -33,6 +34,9 @@ public class OrderService {
 	public List<OrderInfo> findByMemberId(Member member){
 		
 		return orderInfoRepository.findByMemberOrderByOrderIdDesc(member);
+	}
+	public List<OrderInfo> findByShopId(Shop shop){
+		return orderInfoRepository.findByShopOrderByOrderIdDesc(shop);
 	}
 	
 }

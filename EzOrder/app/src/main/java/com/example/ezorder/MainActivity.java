@@ -90,6 +90,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onResponse(Call<List<Shop>> call, Response<List<Shop>> response) {
                 for (Shop shop : response.body()) {
                     shops.add(shop);
+                    binding.linearLayoutshop.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+                            intent.putExtra("shopId", recentShopId);
+                            startActivity(intent);
+                        }
+                    });
+
                 }
             }
 
@@ -100,14 +109,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         //가게 클릭
-        binding.linearLayoutshop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
-                intent.putExtra("shopId", recentShopId);
-                startActivity(intent);
-            }
-        });
 
 
     }//[onCreate End]

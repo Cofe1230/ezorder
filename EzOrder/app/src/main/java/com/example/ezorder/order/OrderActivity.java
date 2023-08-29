@@ -16,9 +16,13 @@ import android.widget.Toast;
 import com.example.ezorder.EzOrderClient;
 import com.example.ezorder.R;
 import com.example.ezorder.databinding.ActivityOrderBinding;
+import com.example.ezorder.fcm.FcmClient;
+import com.example.ezorder.fcm.MyFcmPostService;
+import com.example.ezorder.fcm.NotificationBody;
 import com.example.ezorder.member.Member;
 import com.example.ezorder.member.MemberService;
 import com.example.ezorder.orderstatus.OrderStatusActivity;
+import com.example.ezorder.shop.ShopService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -29,11 +33,13 @@ import java.util.List;
 import java.util.UUID;
 
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OrderActivity extends AppCompatActivity {
+    private final String TAG = "OrderActivity";
     private ActivityOrderBinding binding;
     private ArrayList<Menu> menuList = new ArrayList<>();
     private ArrayList<OrderCount> orderList = new ArrayList<>();
@@ -41,6 +47,7 @@ public class OrderActivity extends AppCompatActivity {
     private String memberName;
     private Member member;
     private long shopid;
+    private Shop shop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +66,19 @@ public class OrderActivity extends AppCompatActivity {
 //        Shop shop = new Shop(1,"1",1,1,"1");
 
         Intent orderIntent = getIntent();
-        shopid = orderIntent.getLongExtra("shopId",2);
+        shopid = orderIntent.getLongExtra("shopId",1);
+        Call<Shop> call = EzOrderClient.getInstance().getShopService().findByShopId(shopid);
+        call.enqueue(new Callback<Shop>() {
+            @Override
+            public void onResponse(Call<Shop> call, Response<Shop> response) {
+                shop = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<Shop> call, Throwable t) {
+
+            }
+        });
 //        menuList.add(new Menu(1,"아메리카노",1500,"1"));
 //        menuList.add(new Menu(2,"카페라떼",3000,"1"));
 //        menuList.add(new Menu(3,"카푸치노",3000,"1"));
@@ -71,7 +90,7 @@ public class OrderActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<String> task) {
                         if (!task.isSuccessful()) {
-                            Log.w("awevfaeaefa", "Fetching FCM registration token failed", task.getException());
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
                             return;
                         }
 
@@ -80,8 +99,7 @@ public class OrderActivity extends AppCompatActivity {
 
                         // Log and toast
                         String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d("awevfaeaefa", msg);
-                        Toast.makeText(OrderActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, msg);
                     }
                 });
 
@@ -106,8 +124,8 @@ public class OrderActivity extends AppCompatActivity {
         binding.recyclerViewCart.setAdapter(orderAdapter);
 
         //메뉴 리스트
-        Call<List<Menu>> call = menuService.findByShop(shopid);
-        call.enqueue(new Callback<List<Menu>>() {
+        Call<List<Menu>> call2 = menuService.findByShop(shopid);
+        call2.enqueue(new Callback<List<Menu>>() {
             @Override
             public void onResponse(Call<List<Menu>> call, Response<List<Menu>> response) {
                 for(Menu m : response.body()){
@@ -166,6 +184,26 @@ public class OrderActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         Toast.makeText(getApplicationContext(),"주문성공", Toast.LENGTH_SHORT).show();
+                        //shop 정보
+                        Log.d(TAG, "주문하기 클릭시 shop 정보 " + shop.getToken());
+                        //fcm 메시지 전송
+                        MyFcmPostService myFcmPostService = FcmClient.getInstance().getMyFcmPostService();
+                        NotificationBody notificationBody = new NotificationBody(shop.getToken(),
+                                "high",new NotificationBody.NotificationData("주문","주문왔습니다"),
+                                new NotificationBody.NotificationData("주문","주문왔습니다"));
+                        Call<ResponseBody> callFCM = myFcmPostService.postNotification(notificationBody);
+                        callFCM.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+
                         Intent intent = new Intent(getApplicationContext(), OrderStatusActivity.class);
                         startActivity(intent);
                     }

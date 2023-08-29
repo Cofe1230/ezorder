@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ezprder.model.Member;
 import com.example.ezprder.model.OrderInfo;
+import com.example.ezprder.model.Shop;
 import com.example.ezprder.service.MemberService;
 import com.example.ezprder.service.OrderService;
+import com.example.ezprder.service.ShopService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderController {
 	private final OrderService orderService;
 	private final MemberService memberService;
+	private final ShopService shopService;
 	
 	//사용자(일반)가 가게에서 주문했을때 db로 주문 정보 입력
 	@PutMapping("insert")
@@ -36,5 +39,10 @@ public class OrderController {
 	public List<OrderInfo> OrderInfoListByMemberId(@PathVariable String memberName){
 		Member member = memberService.findByMemberName(memberName);
 		return orderService.findByMemberId(member);
+	}
+	@GetMapping("listall")
+	public List<OrderInfo> findAllByShop(long shopId){
+		Shop shop = shopService.findByShopId(shopId);
+		return orderService.findByShopId(shop);
 	}
 }

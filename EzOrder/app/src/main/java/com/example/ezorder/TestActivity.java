@@ -154,7 +154,8 @@ public class TestActivity extends AppCompatActivity {
                 MyFcmPostService myFcmPostService = FcmClient.getInstance().getMyFcmPostService();
                 String token = "fJTuuDiIQlWSUv_XmcobHy:APA91bGESlZBCqaiDKpzC5UwscDKF5yQk0X_nzxZrcqhEAG_r5gRoR-vOyk0ZUDB_i8XE1ZeVApchGYqQt86TROPPMcVMx35GKrUa2HdSAmlhGrZKbuIbs_bepNhc3Pm_wc-5O6ZWbYC";
                 NotificationBody notificationBody = new NotificationBody(token,
-                        "high",new NotificationBody.NotificationData("test01","test01"),new NotificationBody.NotificationData("test01","test01"));
+                        "high",new NotificationBody.NotificationData("test01","test01"),
+                        new NotificationBody.NotificationData("test01","test01"));
                 Call<ResponseBody> call = myFcmPostService.postNotification(notificationBody);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override

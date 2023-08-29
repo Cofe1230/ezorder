@@ -2,6 +2,8 @@ package com.example.cafemanager.management;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +14,15 @@ import android.widget.Toast;
 import com.example.cafemanager.CafeManagerClient;
 import com.example.cafemanager.R;
 import com.example.cafemanager.databinding.ActivityManagementBinding;
+import com.example.cafemanager.order.OrderCount;
+import com.example.cafemanager.order.OrderInfo;
 import com.example.cafemanager.shop.Shop;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +32,8 @@ public class ManagementActivity extends AppCompatActivity {
     private final String TAG = "ManagementActivity";
     private Shop shop;
     private String token;
+    private ArrayList<OrderInfo> orderInfoList = new ArrayList<>();
+    private OrderAdapter orderAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +87,53 @@ public class ManagementActivity extends AppCompatActivity {
                             }
                         });
             }
-
             @Override
             public void onFailure(Call<Shop> call, Throwable t) {
 
             }
+        });//[call end]
+        orderAdapter = new OrderAdapter(orderInfoList);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ManagementActivity.this, RecyclerView.VERTICAL,false);
+        binding.recyclerView.setLayoutManager(linearLayoutManager);
+        binding.recyclerView.setAdapter(orderAdapter);
+        //가게 전체 orderList
+        findAllByShop(shopId);
+        //버튼 클릭시 새로고침
+        binding.orderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orderAdapter.clear();
+                findAllByShop(shopId);
+            }
         });
 
+    }//[onCreate end]
+    
+    //주문 리스트 서버에 요청
+    private void findAllByShop(long shopId){
+        Call<List<OrderInfo>> orderListCall = CafeManagerClient.getInstance().getOrderService().findAllByShop(shopId);
+        orderListCall.enqueue(new Callback<List<OrderInfo>>() {
+            @Override
+            public void onResponse(Call<List<OrderInfo>> call, Response<List<OrderInfo>> response) {
+                for(OrderInfo orderInfo : response.body()){
+                    orderAdapter.addItem(orderInfo);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<OrderInfo>> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "onNewIntent: 여기 들어옴" + shop.getShopId());
+        orderAdapter.clear();
+        findAllByShop(shop.getShopId());
     }
 }

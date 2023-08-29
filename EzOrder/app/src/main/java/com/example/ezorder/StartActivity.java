@@ -14,7 +14,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+
+import com.example.ezorder.databinding.ActivityStartBinding;
 
 import java.util.UUID;
 
@@ -39,7 +42,8 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+        ActivityStartBinding binding = ActivityStartBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         SharedPreferences preferences = getSharedPreferences("MemberInfo", MODE_PRIVATE);
         String memberName = preferences.getString("memberName","");
@@ -91,8 +95,13 @@ public class StartActivity extends AppCompatActivity {
         //알림허가
         askNotificationPermission();
 
-        Intent intent = new Intent(StartActivity.this, MainActivity.class);
-        startActivity(intent);
+        binding.startBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }//[onCreate End]
 
     //알림 허가

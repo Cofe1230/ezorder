@@ -2,6 +2,8 @@ package com.example.ezprder.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -37,6 +39,11 @@ public class OrderService {
 	}
 	public List<OrderInfo> findByShopId(Shop shop){
 		return orderInfoRepository.findByShopOrderByOrderIdDesc(shop);
+	}
+	@Transactional
+	public void updateOrderStatus(long orderId) {
+		OrderInfo orderInfo = orderInfoRepository.findById(orderId).get();
+		orderInfo.setOrderStatus("주문완료");
 	}
 	
 }

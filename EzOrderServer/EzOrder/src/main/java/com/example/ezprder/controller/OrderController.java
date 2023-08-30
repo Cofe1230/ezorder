@@ -45,4 +45,9 @@ public class OrderController {
 		Shop shop = shopService.findByShopId(shopId);
 		return orderService.findByShopId(shop);
 	}
+	@GetMapping("updatestatus")
+	public void updateOrderStatus(long orderId) {
+		orderService.updateOrderStatus(orderId);
+		
+	}
 }

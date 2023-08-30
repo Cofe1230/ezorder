@@ -25,4 +25,7 @@ public class UserService {
 		shopId=shopRepository.findByUser(findUser).getShopId();
 		return shopId;
 	}
+	public User saveUser(User user) {
+		return userRepository.save(user);
+	}
 }

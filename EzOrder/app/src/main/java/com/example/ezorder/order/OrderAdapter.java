@@ -52,6 +52,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         orderList.remove(pos);
         notifyDataSetChanged();
     }
+    //클리어
+    public void clearItem(){
+        orderList.clear();
+        notifyDataSetChanged();
+    }
 
     //oncreate
     @NonNull

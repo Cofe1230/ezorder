@@ -1,5 +1,6 @@
 package com.example.cafemanager;
 
+import com.example.cafemanager.menu.MenuService;
 import com.example.cafemanager.order.OrderService;
 import com.example.cafemanager.shop.ShopService;
 import com.example.cafemanager.user.UserService;
@@ -12,6 +13,7 @@ public class CafeManagerClient {
     private UserService userService;
     private ShopService shopService;
     private OrderService orderService;
+    private MenuService menuService;
 
     public static CafeManagerClient getInstance(){
         if(instance==null){
@@ -29,6 +31,7 @@ public class CafeManagerClient {
         userService = retrofit.create(UserService.class);
         shopService = retrofit.create(ShopService.class);
         orderService = retrofit.create(OrderService.class);
+        menuService = retrofit.create(MenuService.class);
     }
 
     //getter
@@ -42,5 +45,9 @@ public class CafeManagerClient {
 
     public OrderService getOrderService() {
         return orderService;
+    }
+
+    public MenuService getMenuService() {
+        return menuService;
     }
 }

@@ -40,6 +40,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         notifyDataSetChanged();
     }
 
+
     @NonNull
     @Override
     public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,7 +55,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         holder.binding.txtMenuPrice.setText(Integer.toString(menu.getPrice()));
 
         //이미지 testurl 변경필요
-        Glide.with(holder.binding.getRoot()).load("http://10.100.102.20:8044/image/test01.png").into(holder.binding.imageViewMenu);
+        String imgUrl = "http://10.100.102.20:8044/image/"+menu.getMenuImg();
+        Glide.with(holder.binding.getRoot()).load(imgUrl).into(holder.binding.imageViewMenu);
         
         //view 클릭
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {

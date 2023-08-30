@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,15 +35,19 @@ public class ManagementActivity extends AppCompatActivity {
     private String token;
     private ArrayList<OrderInfo> orderInfoList = new ArrayList<>();
     private OrderAdapter orderAdapter;
+    private long shopId=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityManagementBinding binding = ActivityManagementBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        //로그인된 샵id
-        Intent intent = getIntent();
-        long shopId = intent.getLongExtra("shopId", 0);
+
+        SharedPreferences preferences = getSharedPreferences("ezorder", MODE_PRIVATE);
+        String stShopId = preferences.getString("ezordershopId","");
+        shopId = Long.parseLong(stShopId);
+        //shopId preferedShared 갱신
+
         Log.d(TAG, "shopId: " + shopId);
         //findbyShopId
         Call<Shop> call = CafeManagerClient.getInstance().getShopService().findByShopId(shopId);

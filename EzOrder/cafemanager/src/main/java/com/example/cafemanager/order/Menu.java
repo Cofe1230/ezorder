@@ -1,10 +1,13 @@
 package com.example.cafemanager.order;
 
+import com.example.cafemanager.shop.Shop;
+
 public class Menu {
     private long menuId;
     private String menuName;
     private int price;
     private String menuImg;
+    private Shop shop;
 
     public Menu() {
     }
@@ -47,5 +50,13 @@ public class Menu {
 
     public void setMenuImg(String menuImg) {
         this.menuImg = menuImg;
+    }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 }

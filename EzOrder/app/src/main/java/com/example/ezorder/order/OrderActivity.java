@@ -62,9 +62,6 @@ public class OrderActivity extends AppCompatActivity {
         OrderService orderService = EzOrderClient.getInstance().getOrderService();
         MenuService menuService = EzOrderClient.getInstance().getMenuService();
 
-        //TestMenu(DB구성시 삭제) menu: id, name, price, imgname
-//        Shop shop = new Shop(1,"1",1,1,"1");
-
         Intent orderIntent = getIntent();
         shopid = orderIntent.getLongExtra("shopId",1);
         Call<Shop> call = EzOrderClient.getInstance().getShopService().findByShopId(shopid);
@@ -79,29 +76,6 @@ public class OrderActivity extends AppCompatActivity {
 
             }
         });
-//        menuList.add(new Menu(1,"아메리카노",1500,"1"));
-//        menuList.add(new Menu(2,"카페라떼",3000,"1"));
-//        menuList.add(new Menu(3,"카푸치노",3000,"1"));
-//        menuList.add(new Menu(4,"카라멜 마끼아또",4000,"1"));
-
-        //test
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        // Log and toast
-                        String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d(TAG, msg);
-                    }
-                });
 
         MenuAdapter menuAdapter = new MenuAdapter(menuList);
         OrderAdapter orderAdapter = new OrderAdapter(orderList);
@@ -202,7 +176,7 @@ public class OrderActivity extends AppCompatActivity {
                             public void onFailure(Call<ResponseBody> call, Throwable t) {
 
                             }
-                        });
+                        });//fcm메시지 종료
 
                         Intent intent = new Intent(getApplicationContext(), OrderStatusActivity.class);
                         startActivity(intent);
@@ -213,7 +187,12 @@ public class OrderActivity extends AppCompatActivity {
                         Log.d("테스트", "onResponse: 실패");
                     }
                 });
-            }
+                //주문 초기화
+                orderAdapter.clearItem();
+                totalPrice=0;
+                binding.txtTotalPrice.setText(totalPrice+" 원");
+
+            }//[onClickEnd]
         });//주문하기 버튼 종료
 
         //item 삭제 버튼 클릭

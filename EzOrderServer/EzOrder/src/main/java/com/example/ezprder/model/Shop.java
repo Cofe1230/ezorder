@@ -38,6 +38,8 @@ public class Shop {
 	private List<OrderInfo> orderList;
 	@Builder.Default
 	private String token = "none";
+
+	
 	
 	
 }

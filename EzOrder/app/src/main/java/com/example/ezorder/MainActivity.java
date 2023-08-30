@@ -29,6 +29,7 @@ import android.widget.Toast;
 //중요
 
 
+import com.bumptech.glide.Glide;
 import com.example.ezorder.databinding.ActivityMainBinding;
 import com.example.ezorder.order.OrderActivity;
 import com.example.ezorder.order.Shop;
@@ -177,7 +178,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker.setOnClickListener(overlay -> {
             txtName.setText(marker.getCaptionText());
             //######추후 수정해야함 db에서 받아온 이미지 뿌려주기
-            ivShop.setImageResource(R.drawable.logologo);
+            String imgName = shops.get(shopID).getShopImg();
+            Log.d(TAG, "setMarker:");
+            String imgUrl = "http://10.100.102.20:8044/image/"+imgName;
+            Log.d(TAG, "setMarker: "+imgName);
+            Glide.with(getApplicationContext()).load(imgUrl).into(ivShop);
 
             for (Marker m : markers) {
 //                if (shopID==0) m.setIcon(MarkerIcons.RED);

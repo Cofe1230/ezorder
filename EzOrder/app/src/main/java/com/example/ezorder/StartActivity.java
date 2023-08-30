@@ -95,6 +95,8 @@ public class StartActivity extends AppCompatActivity {
         //알림허가
         askNotificationPermission();
 
+
+
         binding.startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,6 +117,7 @@ public class StartActivity extends AppCompatActivity {
                 // Directly ask for the permission
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
             }
+
         }
     }
 }

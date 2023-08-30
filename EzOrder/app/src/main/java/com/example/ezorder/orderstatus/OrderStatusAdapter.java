@@ -3,6 +3,7 @@ package com.example.ezorder.orderstatus;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.ezorder.databinding.OrderStatusItemBinding;
 import com.example.ezorder.order.OrderActivity;
 import com.example.ezorder.order.OrderAdapter;
@@ -44,6 +46,16 @@ public class OrderStatusAdapter extends RecyclerView.Adapter<OrderStatusAdapter.
         holder.binding.txtOrderStatus.setText(orderInfo.getOrderStatus());
         holder.binding.txtShopName.setText(orderInfo.getShop().getShopName());
         holder.binding.txtTotPrice.setText(Integer.toString(orderInfo.getTotPrice())+"원");
+        //주문 완료시 색상변경
+        if(orderInfo.getOrderStatus().equals("주문완료")){
+            holder.binding.txtOrderStatus.setTextColor(Color.GRAY);
+            holder.binding.txtShopName.setTextColor(Color.GRAY);
+            holder.binding.txtTotPrice.setTextColor(Color.GRAY);
+            holder.binding.txtOrderMenu1.setTextColor(Color.GRAY);
+        }
+        //가게 이미지
+        String imgUrl = "http://10.100.102.20:8044/image/"+orderInfo.getShop().getShopImg();
+        Glide.with(holder.binding.getRoot()).load(imgUrl).into(holder.binding.ivShop);
 
         String menuName = orderInfo.getOrderList().get(0).getMenu().getMenuName();
         int menuSize = orderInfo.getOrderList().size();

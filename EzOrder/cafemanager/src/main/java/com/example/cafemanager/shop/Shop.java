@@ -1,5 +1,7 @@
 package com.example.cafemanager.shop;
 
+import com.example.cafemanager.user.User;
+
 public class Shop {
     private long shopId;
     private String shopName;
@@ -7,6 +9,14 @@ public class Shop {
     private double longitude;
     private String shopImg;
     private String token;
+    private User user;
+
+    public Shop() {
+    }
+
+    public Shop(long shopId) {
+        this.shopId = shopId;
+    }
 
     public long getShopId() {
         return shopId;
@@ -54,5 +64,13 @@ public class Shop {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

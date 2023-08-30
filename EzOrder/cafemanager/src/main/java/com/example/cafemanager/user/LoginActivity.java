@@ -3,6 +3,7 @@ package com.example.cafemanager.user;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.cafemanager.CafeManagerClient;
 import com.example.cafemanager.R;
+import com.example.cafemanager.SelectActivity;
 import com.example.cafemanager.databinding.ActivityLoginBinding;
 import com.example.cafemanager.management.ManagementActivity;
 
@@ -39,9 +41,18 @@ public class LoginActivity extends AppCompatActivity {
                         //response.body() -1:실패 or shopid
                         if(response.body()!=-1){
                             long shopId = response.body();
+
+                            SharedPreferences preferences = getSharedPreferences("ezorder", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("ezordershopId",Long.toString(shopId));
+                            editor.commit();
+
+                            String aaa = preferences.getString("ezordershopId","");
+                            long bbb = Long.parseLong(aaa);
+                            Log.d(TAG, "onResponse: "+bbb);
+
                             Log.d(TAG, "onResponse: 로그인성공 id : "+shopId);
-                            Intent intent = new Intent(LoginActivity.this, ManagementActivity.class);
-                            intent.putExtra("shopId", shopId);
+                            Intent intent = new Intent(LoginActivity.this, SelectActivity.class);
                             startActivity(intent);
                         }else{
                             Log.d(TAG, "onResponse: 로그인실패");

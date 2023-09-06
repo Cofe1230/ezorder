@@ -1,10 +1,12 @@
 package com.example.ezprder.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.annotation.MultipartConfig;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +48,7 @@ public class ShopController {
 		System.out.println("controller uploadImage");
         String imagePath = shopService.uploadImage(file); // 이미지를 업로드하고 경로를 받아옴
         System.out.println(imagePath);
+        
         return ResponseEntity.ok(imagePath);
 	}
 	@PostMapping("insert")

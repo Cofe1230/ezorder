@@ -52,8 +52,16 @@
   * Naver Map api
   * Firebase FCM
   * Retrofit2
+  * **Tool** : Android Studio
 * **Back-end**
   * Java
   * Spring boot
   * Spring Data JPA
   * MySQL #Database
+  * **Tool** : STS4
+## 팀원
+* 김명준
+* 김성민
+* 설성칠
+* 하재민
+ 
